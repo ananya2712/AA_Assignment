@@ -243,16 +243,12 @@ class Jpeg_img:
 
 
 def imgToFFT():
-    img = cv2.imread('dice.jpg')
-    b, g, r = cv2.split(img)
-    b_img = Jpeg_img(b,99)
-    g_img = Jpeg_img(g,99)
-    r_img = Jpeg_img(r,99)
-    b_c = b_img.render()
-    g_c = g_img.render()
-    r_c = r_img.render()
-    img_c = cv2.merge([b_c,g_c,r_c])
-    cv2.imwrite("dice2.jpg", img_c)
+    img = Image.open('dice.jpg')
+    img = img.convert('L')
+    img = np.array(img)
+    fft_img = Jpeg_img(img, 99)
+    fft_img_c = fft_img.render()
+    cv2.imwrite("dice2.jpg", fft_img_c)
 
 
 imgToFFT()
