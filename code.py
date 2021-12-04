@@ -2,7 +2,7 @@ from PIL import Image
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
-import rsa
+# import rsa
 import warnings
 warnings.simplefilter("ignore", np.ComplexWarning)
 
@@ -112,21 +112,6 @@ def polynomial_multiplication(P, Q):
 # print(multiply([1, 2, 3, 4], [1, 2, 3, 4]))
 # print(polynomial_multiplication([1, 2, 3, 4], [1, 2, 3, 4]))
 
-
-BITS = 1024
-publicKey, privateKey = rsa.newkeys(BITS)
-
-def rsa_encryption(message, publicKey):
-    return rsa.encrypt(message.encode(),publicKey)
-def rsa_decryption(message, privateKey):
-    return rsa.decrypt(message, privateKey).decode()
-
-# m = "Hello world"
-# print(m)
-# em = rsa_encryption(m, publicKey)
-# print(em)
-# print(rsa_decryption(em, privateKey))
-
 def fft2(A):
     """
         2 d fft
@@ -191,23 +176,21 @@ class ImageCompressor:
 
     def __init__(self,img,compression_ratio):
         self.img = np.array(img)
-        self.shape = self.img.shape
         assert compression_ratio < 100 and compression_ratio >= 0
         self.compression_ratio = compression_ratio
-        self.c_img = self.img_compress(self.img,compression_ratio)
 
     def img_compress(self,A, compression_ratio):
         self.y_A = np.fft.fft2(A)
         flat = self.y_A.flatten()
         flat.sort()
-        threshold = flat[int(len(self.y_A)*(100-self.compression_ratio)/100)]
-        return threshold
+        return flat[int(len(self.y_A)*(100-self.compression_ratio)/100)]
 
     def render(self):
+        threshold = self.img_compress(self.img, self.compression_ratio)
 
         for r in range(len(self.y_A)):
             for c in range(len(self.y_A[r])):
-                if (self.y_A[r][c].real < self.c_img):
+                if (self.y_A[r][c].real < threshold):
                     self.y_A[r][c] = 0
 
         A = np.fft.ifft2(self.y_A).real
@@ -225,7 +208,7 @@ def imgToFFT():
     cv2.imwrite("dice2.jpg", fft_img_c)
 
 
-imgToFFT()
+# imgToFFT()
 
 
 
