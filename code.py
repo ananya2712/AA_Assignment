@@ -187,56 +187,30 @@ def fftOnImage():
 
 # fftOnImage()
 
-class Jpeg_img:
+class ImageCompressor:
 
-    def __init__(self,img,comp_per):
-        '''
-        Stores the image matrix in sparse matrix form after compresion
-        Input: img: image matrix
-        comp_per: compression ratio in percentage'''
+    def __init__(self,img,compression_ratio):
         self.img = np.array(img)
         self.shape = self.img.shape
-        assert comp_per < 100 and comp_per >= 0
-        self.comp_per = comp_per
-        self.c_img = self.img_compress(self.img,comp_per)
+        assert compression_ratio < 100 and compression_ratio >= 0
+        self.compression_ratio = compression_ratio
+        self.c_img = self.img_compress(self.img,compression_ratio)
 
-
-    def img_compress(self,A, comp_per):
-        ''' A: m x n matrix where m and n are powers of 2
-            comp_per: percentage, ranges b/w [0 , 100)
-            Returns: Compressed and transformed matrix of A represented in sparse matrix format,shape of sparse matrix
-            Raises:
-                Value error'''
-
-
-        y_A = np.fft.fft2(A)
-        y_li = []
-        m,n = y_A.shape
-
-        for r in range(m):
-            for c in range(n):
-                y_li.append((r,c,y_A[r][c]))
-
-        y_li.sort(key = lambda x: x[2]*x[2].conjugate())
-
-        y_li = y_li[::-1]
-        y_li = y_li[:int(len(y_li)*(100-comp_per)/100)]
-        return y_li
+    def img_compress(self,A, compression_ratio):
+        self.y_A = np.fft.fft2(A)
+        flat = self.y_A.flatten()
+        flat.sort()
+        threshold = flat[int(len(self.y_A)*(100-self.compression_ratio)/100)]
+        return threshold
 
     def render(self):
 
-        y_li = self.c_img
-        m,n = self.shape
-        y_mat = [[0 for i in range(n)] for j in range(m)]
+        for r in range(len(self.y_A)):
+            for c in range(len(self.y_A[r])):
+                if (self.y_A[r][c].real < self.c_img):
+                    self.y_A[r][c] = 0
 
-        for val in y_li:
-            y_mat[val[0]][val[1]] = val[2]
-
-        y_mat = np.array(y_mat)
-        print("Starting conversion")
-        A = np.fft.ifft2(y_mat).real
-
-        print("Conversion Done")
+        A = np.fft.ifft2(self.y_A).real
 
         return A
 
@@ -246,7 +220,7 @@ def imgToFFT():
     img = Image.open('dice.jpg')
     img = img.convert('L')
     img = np.array(img)
-    fft_img = Jpeg_img(img, 99)
+    fft_img = ImageCompressor(img, 99)
     fft_img_c = fft_img.render()
     cv2.imwrite("dice2.jpg", fft_img_c)
 
