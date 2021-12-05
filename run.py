@@ -1,31 +1,17 @@
-from utils import *
-from rsa import *
+import sys
+sys.path.append('./utils/')
+
+from dft import *
+from fft import *
+from rsa_custom import *
+from misc import *
+from image_functions import *
+
 import random
 import numpy as np
 from filecmp import cmp
-
-def genPolynomial(n):
-    x = [random.randint(1, 100) for i in range(n)]
-    return x
-
-def horner(a, x):
-    result = 0
-    for i in range(len(a)-1, -1, -1):
-        result = a[i] + (x * result)
-    return result
-
-def getPvForm(A):
-    pv = []
-    for x in range(1, len(A) + 1):
-        y = horner(A, x)
-        pv.append((x, y))
-    return pv
-
-def writeToFile(path, text):
-    fo = open(path, 'w')
-    for x, y in text:
-        fo.write(f"{str(x)} : {str(y)} \n")
-    fo.close()
+import warnings
+warnings.simplefilter("ignore", np.ComplexWarning)
 
 
 size = int(input("Enter number of elements in point value representation: "))
@@ -96,7 +82,7 @@ else:
     print("\033[91mFAILED\033[0m File Encryption")
 ################################################################################
 print("\n\n\n")
-print("\033[1mRunning Encryption and Decryption: \033[0m")
+print("\033[1mRunning Multiplication test with conventional for loop: \033[0m")
 
 print("\033[96mBrute force multiplication: \033[0m")
 brute = polynomial_multiplication(A, B)

@@ -1,33 +1,6 @@
 import math
 from Crypto.Util import number
-
-
-def binary_exponentiation(base, power, mod):
-    result = 1
-    while (power):
-        if (power & 1):
-            if (mod != -1):
-                result = (result * base) % mod
-            else:
-                result *= base
-        if (mod != -1):
-            base = (base * base) % mod
-        else:
-            base *= base
-        power >>= 1
-    return result
-
-def xgcd(a, b):
-    x, old_x = 0, 1
-    y, old_y = 1, 0
-
-    while (b != 0):
-        quotient = a // b
-        a, b = b, a - quotient * b
-        old_x, x = x, old_x - quotient * x
-        old_y, y = y, old_y - quotient * y
-
-    return a, old_x, old_y
+from misc import *
 
 def chooseE(totient):
     for i in range(3, totient, 2):
