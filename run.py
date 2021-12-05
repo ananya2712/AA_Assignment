@@ -135,7 +135,7 @@ print(bcolors.HEADER + "Running Image Compression: " + bcolors.ENDC)
 
 compression_ratio = int(input("Enter compression ratio: "))
 path = input("Enter path to image: ")
-imgToFFT(path, compression_ratio)
+compressImage(path, compression_ratio)
 # TODO: get image which is black and white to begin with
 print(bcolors.OKCYAN + bcolors.UNDERLINE + f"Check {path} and compare with 'converted.jpg'" + bcolors.ENDC + bcolors.ENDC)
 ################################################################################

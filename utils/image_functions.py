@@ -21,14 +21,14 @@ class ImageCompressor:
         assert compression_ratio < 100 and compression_ratio >= 0
         self.compression_ratio = compression_ratio
 
-    def img_compress(self,A, compression_ratio):
+    def getThreshold(self,A, compression_ratio):
         self.y_A = np.fft.fft2(A)
         flat = self.y_A.flatten()
         flat.sort()
         return flat[int(len(self.y_A)*(100-self.compression_ratio)/100)]
 
     def render(self):
-        threshold = self.img_compress(self.img, self.compression_ratio)
+        threshold = self.getThreshold(self.img, self.compression_ratio)
 
         for r in range(len(self.y_A)):
             for c in range(len(self.y_A[r])):
@@ -41,7 +41,7 @@ class ImageCompressor:
 
 
 
-def imgToFFT(path, compression_ratio):
+def compressImage(path, compression_ratio):
     img = Image.open(path)
     img = img.convert('L')
     img = np.array(img)
