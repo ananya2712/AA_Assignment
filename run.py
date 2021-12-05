@@ -19,18 +19,30 @@ parser.add_argument('--v', default = 1, help = 'increase verbosity of program')
 args = parser.parse_args()
 verbosity = (args.v == 1)
 
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
 size = int(input("Enter number of elements in point value representation: "))
 assert isPowerOfTwo(size) == True
 
 A = genPolynomial(size)
 B = genPolynomial(size)
 
-print("A = ", A)
-print("B = ", B)
+if (verbosity):
+    print("A = ", A)
+    print("B = ", B)
 
 ################################################################################
 print("\n\n\n")
-print("\033[1mRunning DFT: \033[0m")
+print(bcolors.HEADER + "Running DFT: " + bcolors.ENDC)
 dft_A = dft(A)
 dft_B = dft(B)
 
@@ -39,12 +51,12 @@ if (verbosity):
     print("dft_B = ", dft_B)
 
 if (np.allclose(dft_A, np.fft.fft(A)) and np.allclose(dft_B, np.fft.fft(B))):
-    print("\033[92mPASSED\033[0m DFT")
+    print(bcolors.OKGREEN + "PASSED" + bcolors.ENDC + " DFT")
 else:
-    print("\033[91mFAILED\033[0m DFT")
+    print(bcolors.FAIL + "FAILED" + bcolors.ENDC + " DFT")
 ################################################################################
 print("\n\n\n")
-print("\033[1mRunning FFT: \033[0m")
+print(bcolors.HEADER + "Running FFT: " + bcolors.ENDC)
 fft_A = fft(A)
 fft_B = fft(B)
 
@@ -53,32 +65,32 @@ if (verbosity):
     print("fft_B = ", fft_B)
 
 if (np.allclose(fft_A, np.fft.fft(A)) and np.allclose(fft_B, np.fft.fft(B))):
-    print("\033[92mPASSED\033[0m FFT")
+    print(bcolors.OKGREEN + "PASSED" + bcolors.ENDC + " FFT")
 else:
-    print("\033[91mFAILED\033[0m FFT")
+    print(bcolors.FAIL + "FAILED" + bcolors.ENDC + " FFT")
 ################################################################################
 print("\n\n\n")
-print("\033[1mRunning Pointwise Multiplication: \033[0m")
+print(bcolors.HEADER + "Running Pointwise Multiplication: " + bcolors.ENDC)
 
-print("\033[96mNumpy: \033[0m")
+print(bcolors.OKCYAN + bcolors.UNDERLINE + "Numpy:" + bcolors.ENDC + bcolors.ENDC)
 numpy_multiply = fft_test(A, B)
 if (verbosity):
     print(numpy_multiply)
 print("Done")
 
-print("\033[96mCustom Implementation: \033[0m")
+print(bcolors.OKCYAN + bcolors.UNDERLINE + "Custom Implementation:" + bcolors.ENDC + bcolors.ENDC)
 custom_multiply = multiply(A, B)
 if (verbosity):
     print(custom_multiply)
 print("Done")
 
 if (np.allclose(numpy_multiply, custom_multiply)):
-    print("\033[92mPASSED\033[0m Multiplication test with FFT")
+    print(bcolors.OKGREEN + "PASSED" + bcolors.ENDC + " Multiplication test with FFT")
 else:
-    print("\033[91mFAILED\033[0m Multiplication test with FFT")
+    print(bcolors.FAIL + "FAILED" + bcolors.ENDC + " Multiplication test with FFT")
 ################################################################################
 print("\n\n\n")
-print("\033[1mRunning Encryption and Decryption: \033[0m")
+print(bcolors.HEADER + "Running Encryption and Decryption: " + bcolors.ENDC)
 
 pv = getPvForm(custom_multiply[:-1])
 writeToFile('pv.txt', pv)
@@ -88,41 +100,41 @@ encrypt('pv.txt', 'encrypted_pv.txt', keys['public_key'])
 decrypt('encrypted_pv.txt', 'decrypted_pv.txt', keys['private_key'])
 
 if (cmp('pv.txt', 'decrypted_pv.txt')):
-    print("\033[92mPASSED\033[0m File Encryption")
+    print(bcolors.OKGREEN + "PASSED" + bcolors.ENDC + " File encryption")
 else:
-    print("\033[91mFAILED\033[0m File Encryption")
+    print(bcolors.FAIL + "FAILED" + bcolors.ENDC + " File encryption")
 ################################################################################
 print("\n\n\n")
-print("\033[1mRunning Multiplication test with conventional for loop: \033[0m")
+print(bcolors.HEADER + "Running Multiplication test with conventional for loop: " + bcolors.ENDC)
 
-print("\033[96mBrute force multiplication: \033[0m")
+print(bcolors.OKCYAN + bcolors.UNDERLINE + "Brute force multiplication:" + bcolors.ENDC + bcolors.ENDC)
 brute = polynomial_multiplication(A, B)
 if (verbosity):
     print(brute)
 print("Done")
 
 if (np.allclose(brute, custom_multiply[:-1])):
-    print("\033[92mPASSED\033[0m Multiplication test with conventional for loop")
+    print(bcolors.OKGREEN + "PASSED" + bcolors.ENDC + " Multiplication test with conventional for loop")
 else:
-    print("\033[91mFAILED\033[0m Multiplication test with conventional for loop")
+    print(bcolors.FAIL + "FAILED" + bcolors.ENDC + " Multiplication test with conventional for loop")
 ################################################################################
 print("\n\n\n")
-print("\033[1mRunning 2D FFT and IFFT on random image: \033[0m")
+print(bcolors.HEADER + "Running 2D FFT and IFFT on random image: " + bcolors.ENDC)
 
 original_image, fft_image = fftOnImage()
 # TODO: make it grayscale image
 
 if (np.allclose(original_image, fft_image)):
-    print("\033[92mPASSED\033[0m 2D FFT and IFFT")
+    print(bcolors.OKGREEN + "PASSED" + bcolors.ENDC + " 2D FFT and IFFT")
 else:
-    print("\033[91mFAILED\033[0m 2D FFT and IFFT")
+    print(bcolors.FAIL + "FAILED" + bcolors.ENDC + " 2D FFT and IFFT")
 ################################################################################
 print("\n\n\n")
-print("\033[1mRunning Image Compression: \033[0m")
+print(bcolors.HEADER + "Running Image Compression: " + bcolors.ENDC)
 
 compression_ratio = int(input("Enter compression ratio: "))
 path = input("Enter path to image: ")
 imgToFFT(path, compression_ratio)
 # TODO: get image which is black and white to begin with
-print(f"\033[96mCheck {path} and compare with 'converted.jpg'\033[0m")
+print(bcolors.OKCYAN + bcolors.UNDERLINE + f"Check {path} and compare with 'converted.jpg'" + bcolors.ENDC + bcolors.ENDC)
 ################################################################################
