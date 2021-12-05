@@ -6,7 +6,7 @@ from fft import *
 from rsa_custom import *
 from misc import *
 from image_functions import *
-
+import time
 import random
 import numpy as np
 from filecmp import cmp
@@ -39,6 +39,7 @@ B = genPolynomial(size)
 if (verbosity):
     print("A = ", A)
     print("B = ", B)
+
 
 ################################################################################
 print("\n\n\n")
@@ -137,4 +138,30 @@ path = input("Enter path to image: ")
 imgToFFT(path, compression_ratio)
 # TODO: get image which is black and white to begin with
 print(bcolors.OKCYAN + bcolors.UNDERLINE + f"Check {path} and compare with 'converted.jpg'" + bcolors.ENDC + bcolors.ENDC)
+################################################################################
+print("\n\n\n")
+print(bcolors.HEADER + "Brute VS FFT VS DFT: " + bcolors.ENDC)
+
+print(bcolors.OKCYAN + bcolors.UNDERLINE + "Brute force multiplication:" + bcolors.ENDC + bcolors.ENDC)
+start_time = time.time()
+brute = polynomial_multiplication(A, B)
+print("--- %s seconds ---" % (time.time() - start_time))
+
+print(bcolors.OKCYAN + bcolors.UNDERLINE + "FFT Numpy:" + bcolors.ENDC + bcolors.ENDC)
+start_time = time.time()
+fft_numpy = fft_test(A, B)
+print("--- %s seconds ---" % (time.time() - start_time))
+
+print(bcolors.OKCYAN + bcolors.UNDERLINE + "FFT custom:" + bcolors.ENDC + bcolors.ENDC)
+start_time = time.time()
+custom_multiply = multiply(A, B)
+print("--- %s seconds ---" % (time.time() - start_time))
+
+print(bcolors.OKCYAN + bcolors.UNDERLINE + "DFT:" + bcolors.ENDC + bcolors.ENDC)
+start_time = time.time()
+dft_A = dft(A)
+dft_B = dft(B)
+dft_C = np.multiply(dft_A, dft_B)
+dft_y = idft(dft_C)
+print("--- %s seconds ---" % (time.time() - start_time))
 ################################################################################
