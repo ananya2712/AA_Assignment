@@ -2,7 +2,6 @@ from PIL import Image
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
-# import rsa
 import warnings
 warnings.simplefilter("ignore", np.ComplexWarning)
 
@@ -93,7 +92,9 @@ def fft_test(arr_a,arr_b):
     for i in range( len(a_f) ):
         c_f[i]=a_f[i]*b_f[i]
 
-    return np.fft.ifft(c_f)
+    C = np.fft.ifft(c_f)
+    C = [i.real for i in C]
+    return C
 
 
 def polynomial_multiplication(P, Q):
@@ -169,6 +170,7 @@ def fftOnImage():
     plt.show()
     plt.imshow(img)
     plt.show()
+    return (imarray, img)
 
 # fftOnImage()
 
@@ -199,13 +201,13 @@ class ImageCompressor:
 
 
 
-def imgToFFT():
-    img = Image.open('dice.jpg')
+def imgToFFT(path, compression_ratio):
+    img = Image.open(path)
     img = img.convert('L')
     img = np.array(img)
-    fft_img = ImageCompressor(img, 99)
+    fft_img = ImageCompressor(img, compression_ratio)
     fft_img_c = fft_img.render()
-    cv2.imwrite("dice2.jpg", fft_img_c)
+    cv2.imwrite("converted.jpg", fft_img_c)
 
 
 # imgToFFT()
