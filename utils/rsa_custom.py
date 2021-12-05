@@ -10,10 +10,13 @@ def chooseE(totient):
 def chooseKeys():
     bits = int(input("Enter number of bits in RSA key: "))
     bits >>= 1
-    prime1 = number.getPrime(bits)
-    prime2 = number.getPrime(bits)
+    # prime1 = number.getPrime(bits)
+    # prime2 = number.getPrime(bits)
+    prime1 = getPrime(bits)
+    prime2 = getPrime(bits)
     while (prime2 == prime1):
-        prime2 = number.getPrime(bits)
+        # prime2 = number.getPrime(bits)
+        prime2 = getPrime(bits)
     n = prime1 * prime2
     totient = (prime1 - 1) * (prime2 - 1)
     e = chooseE(totient)

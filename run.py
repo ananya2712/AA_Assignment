@@ -10,9 +10,14 @@ from image_functions import *
 import random
 import numpy as np
 from filecmp import cmp
+import argparse
 import warnings
 warnings.simplefilter("ignore", np.ComplexWarning)
 
+parser = argparse.ArgumentParser(description='Set verbosity.')
+parser.add_argument('--v', default = 1, help = 'increase verbosity of program')
+args = parser.parse_args()
+verbosity = (args.v == 1)
 
 size = int(input("Enter number of elements in point value representation: "))
 assert isPowerOfTwo(size) == True
@@ -29,8 +34,9 @@ print("\033[1mRunning DFT: \033[0m")
 dft_A = dft(A)
 dft_B = dft(B)
 
-print("dft_A = ", dft_A)
-print("dft_B = ", dft_B)
+if (verbosity):
+    print("dft_A = ", dft_A)
+    print("dft_B = ", dft_B)
 
 if (np.allclose(dft_A, np.fft.fft(A)) and np.allclose(dft_B, np.fft.fft(B))):
     print("\033[92mPASSED\033[0m DFT")
@@ -42,8 +48,9 @@ print("\033[1mRunning FFT: \033[0m")
 fft_A = fft(A)
 fft_B = fft(B)
 
-print("fft_A = ", fft_A)
-print("fft_B = ", fft_B)
+if (verbosity):
+    print("fft_A = ", fft_A)
+    print("fft_B = ", fft_B)
 
 if (np.allclose(fft_A, np.fft.fft(A)) and np.allclose(fft_B, np.fft.fft(B))):
     print("\033[92mPASSED\033[0m FFT")
@@ -55,11 +62,15 @@ print("\033[1mRunning Pointwise Multiplication: \033[0m")
 
 print("\033[96mNumpy: \033[0m")
 numpy_multiply = fft_test(A, B)
-print(numpy_multiply)
+if (verbosity):
+    print(numpy_multiply)
+print("Done")
 
 print("\033[96mCustom Implementation: \033[0m")
 custom_multiply = multiply(A, B)
-print(custom_multiply)
+if (verbosity):
+    print(custom_multiply)
+print("Done")
 
 if (np.allclose(numpy_multiply, custom_multiply)):
     print("\033[92mPASSED\033[0m Multiplication test with FFT")
@@ -86,7 +97,9 @@ print("\033[1mRunning Multiplication test with conventional for loop: \033[0m")
 
 print("\033[96mBrute force multiplication: \033[0m")
 brute = polynomial_multiplication(A, B)
-print(brute)
+if (verbosity):
+    print(brute)
+print("Done")
 
 if (np.allclose(brute, custom_multiply[:-1])):
     print("\033[92mPASSED\033[0m Multiplication test with conventional for loop")
@@ -112,5 +125,4 @@ path = input("Enter path to image: ")
 imgToFFT(path, compression_ratio)
 # TODO: get image which is black and white to begin with
 print(f"\033[96mCheck {path} and compare with 'converted.jpg'\033[0m")
-
 ################################################################################

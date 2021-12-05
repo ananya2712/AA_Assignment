@@ -44,16 +44,17 @@ def fft_test(arr_a,arr_b):
     """
         fft based polynomial multiplication using numpy functions
     """
-    length = 4
-    arr_a1=np.pad(arr_a,(0,length),'constant')
-    arr_b1=np.pad(arr_b,(0,length),'constant')
+    arr_a1=np.pad(arr_a,(0,len(arr_b)),'constant')
+    arr_b1=np.pad(arr_b,(0,len(arr_a)),'constant')
     a_f=np.fft.fft(arr_a1)
     b_f=np.fft.fft(arr_b1)
 
-    c_f=[0]*(2*length)
+    # c_f=[0]*(2*length)
 
-    for i in range( len(a_f) ):
-        c_f[i]=a_f[i]*b_f[i]
+    # for i in range( len(a_f) ):
+    #     c_f[i]=a_f[i]*b_f[i]
+
+    c_f = np.multiply(a_f, b_f)
 
     C = np.fft.ifft(c_f)
     C = [i.real for i in C]
